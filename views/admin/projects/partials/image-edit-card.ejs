@@ -1,0 +1,30 @@
+<div class="image-edit-card" data-image-id="<%= image._id %>">
+  <img src="/uploads/<%= project.slug %>/<%= image.filename %>" alt="<%= image.altText || '' %>" width="200" />
+
+  <div class="image-metadata-form">
+    <label>
+      Alt Text
+      <input type="text" name="altText" value="<%= image.altText || '' %>" placeholder="Descriptive text..." />
+    </label>
+
+    <label>
+      Caption
+      <input type="text" name="caption" value="<%= image.caption || '' %>" placeholder="Image caption..." />
+    </label>
+
+    <label>
+      Featured Image
+      <input type="radio" name="isFeatured" value="<%= image._id %>" <%= image.isFeatured ? 'checked' : '' %> />
+    </label>
+
+    <button type="button" class="btn btn-save" onclick="updateImageMetadata('<%= project._id %>', '<%= image._id %>')">Save Metadata</button>
+
+    <button
+    type="button"
+    class="btn btn-danger"
+    onclick="deleteProjectImage('<%= project._id %>', '<%= image._id %>')"
+    >
+    Delete Image
+    </button>
+  </div>
+</div>

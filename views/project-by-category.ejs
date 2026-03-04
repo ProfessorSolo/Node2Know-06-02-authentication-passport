@@ -1,0 +1,25 @@
+<section class="category-header wrapper">
+  <h2>Projects in: <%= category.name %></h2>
+
+  <% if (category.description) { %>
+  <p class="category-description"><%= category.description %></p>
+  <% } %>
+
+  <p>
+    <a href="/projects" class="btn btn-secondary btn-small">← Back to All Projects</a>
+  </p>
+</section>
+
+<section class="category-projects wrapper">
+  <% if (projects.length === 0) { %>
+  <p>No projects found in this category yet.</p>
+  <% } else { %>
+  <ul>
+    <% projects.forEach(project => { %>
+    <li>
+      <a href="/projects/<%= project.slug %>"><%= project.title %></a>
+    </li>
+    <% }) %>
+  </ul>
+  <% } %>
+</section>

@@ -1,0 +1,36 @@
+<h2>Admin: Categories</h2>
+
+<p>
+  <a class="btn" href="/admin/categories/new">+ Create Category</a>
+</p>
+
+<ul class="admin-list js-categories-list">
+  <% categories.forEach(c => { %>
+  <li
+    class="admin-item js-category"
+    data-id="<%= c._id %>"
+    style="display:flex; justify-content:space-between; align-items:center;margin-bottom:1rem;"
+  >
+    <div class="admin-main">
+      <strong><%= c.name %></strong><br />
+      <small>/categories/<%= c.slug %></small><br />
+      <small><strong><%= c.refCount %></strong> Linked Projects</small>
+      <% if (c.description) { %>
+      <p><%= c.description %></p>
+      <% } %>
+    </div>
+
+    <div class="admin-actions">
+      <div style="display:flex; gap:.5rem; justify-content:flex-end;">
+        <a class="btn" href="/admin/categories/<%= c._id %>/edit">Edit</a>
+        <button
+          class="btn btn-danger category-delete"
+          <%= c.refCount > 0 ? "disabled" : "" %>
+        >Delete</button>
+      </div>
+    </div>
+  </li>
+  <% }) %>
+</ul>
+
+<script src="/scripts/admin/categories.js"></script>

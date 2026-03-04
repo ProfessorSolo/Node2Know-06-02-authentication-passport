@@ -1,0 +1,60 @@
+<h2>Admin: Contact Submissions</h2>
+
+<ul class="admin-list js-contacts-list">
+  <% contacts.forEach(c => { %>
+    <li
+      class="admin-item js-contact"
+      data-id="<%= c._id %>"
+      style="display:flex; justify-content:space-between; align-items:center;"
+    >
+      <!-- Core Information -->
+      <div class="admin-main">
+        <strong><%= c.name %></strong>
+        <small><%= c.email %></small><br />
+        <small><%= c.postedDate %></small><br />
+
+        <p><%= c.message %></p>
+      </div>
+
+      <!-- The Action Cluster -->
+      <div class="admin-actions">
+        <!-- Visual Status Pill -->
+        <small class="pill js-read-pill <%= c.isRead ? "pill-read" : "pill-unread" %>">
+          <%= c.isRead ? "Read" : "Unread" %>
+        </small>
+
+        <!-- Read/Unread toggle (radio pair) -->
+        <div
+          class="read-toggle"
+          style="display:flex; gap:.75rem; align-items:center; margin:.5rem 0;"
+        >
+          <label>
+            <input
+              type="radio"
+              name="readState-<%= c._id %>"
+              value="unread"
+              class="contact-toggle-read"
+              <%= !c.isRead ? "checked" : "" %>
+            />
+            Unread
+          </label>
+
+          <label>
+            <input
+              type="radio"
+              name="readState-<%= c._id %>"
+              value="read"
+              class="contact-toggle-read"
+              <%= c.isRead ? "checked" : "" %>
+            />
+            Read
+          </label>
+        </div>
+
+        <button class="btn btn-danger contact-delete">Delete</button>
+      </div>
+    </li>
+  <% }) %>
+</ul>
+
+<script src="/scripts/admin/contacts.js"></script>

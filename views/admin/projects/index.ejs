@@ -1,0 +1,63 @@
+<h2>Admin: Projects</h2>
+
+<p>
+  <a class="btn" href="/admin/projects/new">+ Create Project</a>
+</p>
+
+<ul class="admin-list js-projects-list">
+  <% projects.forEach(p => { %>
+    <li
+      class="admin-item js-project"
+      data-id="<%= p._id %>"
+      style="display:flex; justify-content:space-between; align-items:center;margin-bottom:1rem;"
+    >
+      <!-- Core Information -->
+      <div class="admin-main">
+        <strong><%= p.title %></strong><br />
+        slug: <small>/projects/<%= p.slug %></small><br />
+        <% if (p.updatedAt || p.createdAt) { %>
+          <small>
+            <%= p.updatedAt ? `Updated: ${p.updatedAt}` : `Created: ${p.createdAt}` %>
+          </small><br />
+        <% } %>
+
+        <!-- Visual Status Pill -->
+        isActive: 
+        <small class="pill js-active-pill <%= p.isActive ? "pill-active" : "pill-inactive" %>">
+          <%= p.isActive ? "Active" : "Inactive" %>
+        </small><br />
+
+        <!-- Category -->
+        Category: 
+        <small class="pill js-active-pill <%= p.categoryId ? "pill-active" : "pill-inactive" %>">
+          <%= p.categoryId ? p.categoryId.name : "None" %>
+        </small><br />
+
+        <!-- Tags -->
+        Tags: 
+        <small class="pill js-active-pill <%= p.tags.length ? "pill-active" : "pill-inactive" %>">
+          <%= p.tags.length ? p.tags.map(t => t.name).join(", ") : "None" %>
+        </small><br />
+
+        <% if (p.description) { %>
+          <p><%= p.description %></p>
+        <% } %>
+      </div>
+
+      <!-- The Action Cluster -->
+      <div class="admin-actions">
+        
+
+        
+
+        <div style="display:flex; gap:.5rem; justify-content:flex-end;">
+          <a class="btn" href="/admin/projects/<%= p._id %>/images">Manage Images</a>
+          <a class="btn" href="/admin/projects/<%= p._id %>/edit">Edit</a>
+          <button class="btn btn-danger project-delete">Delete</button>
+        </div>
+      </div>
+    </li>
+  <% }) %>
+</ul>
+
+<script src="/scripts/admin/projects.js"></script>

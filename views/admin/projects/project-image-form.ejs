@@ -1,0 +1,124 @@
+<div class="header">
+  <h2>Image Gallery: <%= project.title %></h2>
+  <a href="/admin/projects">Back to Projects</a>
+</div>
+
+<hr />
+
+<!-- SECTION 1: THE UPLOAD FORM -->
+<h3>Upload New Image</h3>
+
+<form
+  action="/admin/projects/<%= project.id %>/images?slug=<%= project.slug %>"
+  method="POST"
+  enctype="multipart/form-data"
+>
+  <label>
+    Image File
+    <input type="file" name="projectImage" accept="image/*" required />
+  </label>
+
+  <label>
+    Alt Text
+    <input
+      type="text"
+      name="altText"
+      placeholder="Descriptive text for screen readers"
+    />
+  </label>
+
+  <label>
+    Caption
+    <input type="text" name="caption" placeholder="Displayed under the image" />
+  </label>
+
+  <label>
+    Featured Image
+    <input type="checkbox" name="isFeatured" value="true" />
+  </label>
+
+  <button type="submit">Upload</button>
+</form>
+
+<hr />
+
+<!-- SECTION 2: THE EXISTING GALLERY -->
+<h3>Existing Images</h3>
+
+<div class="image-gallery">
+  <% project.projectImages.forEach((img, index) => { %>
+  <%- include('partials/image-edit-card', { project, image: img }) %>
+  <% }) %> <% if (project.projectImages.length === 0) { %>
+  <p>No images uploaded yet.</p>
+  <% } %>
+</div>
+
+<script>
+  async function updateImageMetadata(projectId, imageId) {
+    console.log("Update request received for image ID:", imageId);
+    // 1. Find the specific card
+    const card = document.querySelector(
+      `.image-edit-card[data-image-id="${imageId}"]`,
+    );
+
+    // 2. Extract values
+    const altText = card.querySelector('input[name="altText"]').value;
+    const caption = card.querySelector('input[name="caption"]').value;
+    const isFeatured = card.querySelector('input[name="isFeatured"]').checked;
+
+
+    // 3. Fire the asynchronous request
+    try {
+      const response = await fetch(
+        `/admin/projects/${projectId}/images/${imageId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ altText, caption, isFeatured }),
+        },
+      );
+
+      const data = await response.json();
+
+      if (data.success) {
+        alert("Image metadata saved successfully!");
+      } else {
+        alert("Failed to save image metadata.");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("An unexpected error occurred.");
+    }
+  }
+
+  // At the bottom of project-form.ejs
+async function deleteProjectImage(projectId, imageId) {
+  if (!confirm("Are you sure you want to permanently delete this image?"))
+    return;
+
+  try {
+    const response = await fetch(
+      `/admin/projects/${projectId}/images/${imageId}`,
+      {
+        method: "DELETE",
+      },
+    );
+
+    const data = await response.json();
+
+    if (data.success) {
+      // 1. Visually remove the card from the UI
+      document
+        .querySelector(`.image-edit-card[data-image-id="${imageId}"]`)
+        .remove();
+    } else {
+      alert("Failed to delete image metadata.");
+    }
+  } catch (error) {
+    console.error(error);
+    alert("An unexpected error occurred.");
+  }
+}
+</script>

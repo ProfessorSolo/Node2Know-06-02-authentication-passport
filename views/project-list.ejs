@@ -1,0 +1,45 @@
+<h2>Project Gallery</h2>
+<% if (activeTag) {
+%>
+<div class="filter-notice">
+  <h3>Showing results for tag: <span><%= activeTag %></span></h3>
+  <a href="/projects" class="btn btn-secondary btn-small">Clear Filter</a>
+</div>
+<% } %>
+<% if (projects.length > 0) { %>
+<ul>
+  <% projects.forEach(project => { %>
+  <article style="border: 1px solid #ddd; padding: 1rem; margin-bottom: 1rem;">
+  <h2><%= project.title %></h2>
+
+  <%# // Find the single featured image (if any exist) %>
+  <% const featuredImage = project.projectImages?.find(img => img.isFeatured); %> 
+  <% if (featuredImage) { %>
+  <img
+    src="/uploads/<%= project.slug %>/<%= featuredImage.filename %>"
+    alt="<%= featuredImage.altText || project.title %>"
+    style="width: 150px; height: 150px; object-fit: cover; border-radius: 8px; float: left; margin: 0 1rem 1rem 0;"
+  />
+  <% } %>
+
+  <p><%= project.description %></p>
+
+  <% if (project.categoryId) { %>
+  <p>
+    <strong>Category:</strong> <%= project.categoryId.name ?
+    project.categoryId.name : project.categoryId %>
+  </p>
+  <% } %> 
+  <% if (project.tags && project.tags.length) { %>
+  <p><strong>Tags:</strong> <%= project.tags.map(t => t.name).join(", ") %></p>
+  <% } %>
+
+  <div style="clear: both;"></div>
+
+  <a href="/projects/<%= project.slug %>">View Details →</a>
+</article>
+  <% }) %>
+</ul>
+<% } else { %>
+<p>No projects found. Check back later!</p>
+<% } %>
