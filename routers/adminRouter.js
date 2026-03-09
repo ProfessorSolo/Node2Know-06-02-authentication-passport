@@ -19,17 +19,20 @@ router.get("/register", (req, res) => {
 
 // Handle the Form POST submission
 router.post("/register", async (req, res) => {
-    const { email, password } = req.body;
+    const { name, email, password } = req.body;
 
     // 1. Validation basics
-    if (!email || !password) return res.status(400).send("Bad Payload");
+    if (!name || !email || !password) return res.status(400).send("Bad Payload");
 
     try {
         // 2. Execute Data Operation
-        await _userOps.createUser(email, password);
+        const user = await _userOps.createUser(name, email, password);
 
-        // 3. Divert to Login
-        res.redirect("/admin/login");
+        // 3. Auto-Login
+        req.login(user, (err) => {
+            if (err) throw err;
+            res.redirect("/admin");
+        });
     } catch (error) {
         if (error.message === "Email_In_Use") {
             return res
@@ -77,7 +80,20 @@ router.use(requireAuth);
 
 // ADMIN DASHBOARD ROUTE
 router.get("/", async (req, res) => {
-    res.render("admin/index");
+    res.render("admin/index", { user: req.user });
+});
+
+//  ADMIN USER ROUTES
+
+// GET: show unified users admin list
+router.get("/users", async (req, res) => {
+    const users = await _userOps.getAllUsers();
+
+    res.render("admin/users/index", {
+        users: users,
+        editUser: null, // No user is actively being edited on initial load
+        error: null,
+    });
 });
 
 // CONTACT ROUTES

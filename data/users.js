@@ -1,9 +1,16 @@
 const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
 const Schema = mongoose.Schema;
+
+const bcrypt = require("bcrypt");
+
 
 const UserSchema = new Schema(
     {
+        name: {
+            type: String,
+            required: true,
+            trim: true,
+        },
         email: {
             type: String,
             required: true,
@@ -21,7 +28,11 @@ const UserSchema = new Schema(
 const User = mongoose.model("User", UserSchema);
 
 class UserOps {
-    async createUser(email, password) {
+
+
+
+    async createUser(name, email, password) {
+        console.log("Creating user with name:", name);
         console.log("Creating user with email:", email);
         console.log("Creating user with password:", password);
         // 1. Uniqueness Check
@@ -35,7 +46,7 @@ class UserOps {
         const passwordHash = await bcrypt.hash(password, saltRounds);
 
         // 3. Insert Record
-        const user = new User({ email, passwordHash });
+        const user = new User({ name, email, passwordHash });
         await user.save();
         return user;
     }

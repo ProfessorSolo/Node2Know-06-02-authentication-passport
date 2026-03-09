@@ -65,7 +65,7 @@ app.set("view engine", "ejs");
 
 // Temporary Route (Just to check if it works)
 app.get("/", (req, res) => {
-    res.send("<h1>Server is Running! Next Stop: MongoDB.</h1>");
+    res.render("index", { user: req.user });
 });
 
 // 2. Use the Routers

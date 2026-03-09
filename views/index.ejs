@@ -1,0 +1,21 @@
+<h1>Public Home Page</h1>
+
+<% if (locals.user) { %>
+  <h2>Welcome back, <%= user.name || user.email %>!</h2>
+  <p><a href="/admin/logout">Log Out</a></p>
+<% } else { %>
+  <p>You are browsing as a guest.</p>
+  <p>
+    <a href="/admin/login">Log In</a> | 
+    <a href="/admin/register">Register</a>
+  </p>
+<% } %>
+
+<hr />
+
+<h3>Site Navigation</h3>
+<ul>
+  <li><a href="/projects">View Projects</a></li>
+  <li><a href="/contact">Contact Us</a></li>
+</ul>
+

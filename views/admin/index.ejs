@@ -1,5 +1,13 @@
 <h1>Admin Dashboard</h1>
 
+<% if (locals.user) { %>
+  <h2>Welcome back, <%= user.name || user.email %>!</h2>
+<% } %>
+
+<p><a href="/admin/logout">Log Out</a></p>
+
+<p><a href="/admin/register">Register User</a></p>
+
 <p><a href="/admin/projects">Manage Projects</a></p>
 <p><a href="/admin/categories">Manage Categories</a></p>
 <p><a href="/admin/contacts">Manage Contact Submissions</a></p>

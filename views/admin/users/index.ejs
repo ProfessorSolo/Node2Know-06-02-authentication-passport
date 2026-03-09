@@ -1,0 +1,76 @@
+<h1>User Management</h1>
+
+<% if (error) { %>
+  <div class="alert alert-danger"><%= error %></div>
+<% } %>
+
+<!-- 1. The ADD Form -->
+<!-- It uniquely visually renders EXCLUSIVELY if we are NOT in Edit Mode -->
+<% if (!editUser) { %>
+  <div class="add-user-panel" style="background:#f4f4f4; padding:1rem; margin-bottom: 2rem;">
+    <h3>Add New User</h3>
+    <form action="/admin/users" method="POST">
+      <label>Display Name: <input type="text" name="name" required></label>
+      <label>Email: <input type="email" name="email" required></label>
+      <label>Password: <input type="password" name="password" required></label>
+      <label>Permissions Role:
+        <select name="role">
+          <option value="USER">Base User</option>
+          <option value="MODERATOR">Moderator</option>
+          <option value="ADMIN">Administrator</option>
+        </select>
+      </label>
+      <button type="submit" class="btn btn-primary">Create User Profile</button>
+    </form>
+  </div>
+<% } %>
+
+<hr>
+<h3>Current Users</h3>
+
+<div class="user-list">
+  <% users.forEach(user => { %>
+    <div class="user-card" style="border: 1px solid #ccc; padding: 1rem; margin-bottom: 1rem;">
+      <p><strong>Name:</strong> <%= user.name %></p>
+      <p><strong>Email:</strong> <%= user.email %></p>
+      <p><strong>Role:</strong> <span class="badge"><%= user.role %></span></p>
+
+      <div class="actions">
+        <a href="/admin/users/<%= user._id %>/edit" class="btn btn-secondary">Edit</a>
+
+        <form
+        action="/admin/users/<%= user._id %>/delete"
+        method="POST"
+        style="display:inline;"
+        onsubmit="return confirm('Are you sure you want to permanently delete this user?');"
+        >
+        <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
+      </div>
+
+      <!-- 2. The EDIT Form -->
+      <!-- We explicitly verify if the current loop object STRICTLY MATCHES the focused actively requested edit context -->
+      <% if (editUser && editUser._id.toString() === user._id.toString()) { %>
+        <div class="edit-panel" style="background: #e9ecef; border-left: 4px solid #007bff; padding: 1rem; margin-top: 1rem;">
+          <h4>Modify Role Assignment</h4>
+          <form action="/admin/users/<%= user._id %>" method="POST">
+            <p>Targeting: <strong><%= user.email %></strong></p>
+            <label>Name: <input type="text" name="name" value="<%= user.name %>" required></label>
+            <br />
+            <br />
+            <label>Promote/Demote To:
+              <select name="role">
+                <option value="USER" <%= user.role === 'USER' ? 'selected' : '' %>>Base User</option>
+                <option value="MODERATOR" <%= user.role === 'MODERATOR' ? 'selected' : '' %>>Moderator</option>
+                <option value="ADMIN" <%= user.role === 'ADMIN' ? 'selected' : '' %>>Administrator</option>
+              </select>
+            </label>
+            <button type="submit" class="btn btn-success">Save Assignments</button>
+            <a href="/admin/users" class="btn btn-secondary">Cancel</a>
+          </form>
+        </div>
+      <% } %>
+
+    </div>
+  <% }) %>
+</div>
